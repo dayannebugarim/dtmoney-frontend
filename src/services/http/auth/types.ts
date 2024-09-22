@@ -13,3 +13,8 @@ export interface SignInResponse {
   token: string;
   refreshToken: RefreshToken;
 }
+
+export interface RefreshTokenResponse {
+  token: string;
+  refreshToken?: RefreshToken;
+}

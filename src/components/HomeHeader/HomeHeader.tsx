@@ -1,6 +1,7 @@
 import { Box, Button, HStack, Image } from "@chakra-ui/react";
 import { Card } from "./Card";
 import { UserMenu } from "./UserMenu";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 const cardsData = [
   {
@@ -27,6 +28,8 @@ const userData = {
 };
 
 export const HomeHeader = () => {
+  const { user } = useAuthContext();
+
   return (
     <>
       <Box backgroundColor="#121214">
@@ -35,8 +38,6 @@ export const HomeHeader = () => {
           justify="space-between"
           align="center"
           spacing={6}
-          border="1px"
-          borderColor="red"
         >
           <Button
             background="#00875F"
@@ -52,9 +53,8 @@ export const HomeHeader = () => {
           </Button>
           <Image src="/dtmoney-logo.svg" alt="DT Money Logo" />
           <UserMenu
-            name={userData.name}
-            email={userData.email}
-            photo={userData.photo}
+            name={user?.name}
+            email={user?.email}
           />
         </HStack>
         <HStack spacing={6}>

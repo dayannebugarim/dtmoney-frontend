@@ -1,9 +1,10 @@
 "use client";
 import { HomeHeader } from "@/components/HomeHeader";
 import { HomeMain } from "@/components/HomeMain";
+import { withAuth } from "@/components/withAuth";
 import { Container } from "@chakra-ui/react";
 
-export default function Home() {
+function Home() {
   return (
     <>
       <Container maxW="100vw" margin={0} padding={0}>
@@ -13,3 +14,5 @@ export default function Home() {
     </>
   );
 }
+
+export default withAuth(Home);
