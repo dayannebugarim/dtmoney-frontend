@@ -1,12 +1,15 @@
-'use client'
-import { Link } from '@chakra-ui/next-js'
+"use client";
+import { HomeHeader } from "@/components/HomeHeader";
+import { HomeMain } from "@/components/HomeMain";
+import { Container } from "@chakra-ui/react";
 
 export default function Home() {
   return (
     <>
-      <Link href='/login' color='blue.400' _hover={{ color: 'blue.500' }}>
-        Login
-      </Link>
+      <Container maxW="100vw" margin={0} padding={0}>
+        <HomeHeader />
+        <HomeMain />
+      </Container>
     </>
   );
 }

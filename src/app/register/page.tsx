@@ -2,24 +2,21 @@
 import {
   Box,
   Button,
-  Divider,
-  HStack,
   Input,
   InputGroup,
   InputRightElement,
   VStack,
-  Text,
   Image,
   Container,
   Icon,
 } from "@chakra-ui/react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import NextLink from "next/link";
 
-export default function Login() {
+export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
-  const handleClick = () => setShowPassword(!showPassword);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   return (
     <>
@@ -38,16 +35,43 @@ export default function Login() {
           boxShadow="dark-lg"
         >
           <Box
-            display="flex"
             alignItems="center"
             justifyContent="center"
             w="100%"
             paddingBottom={10}
+            display="flex"
           >
-            <Image src="/dtmoney-logo.svg" alt="DT Money Logo" />
+            <Box
+              as={NextLink}
+              href="/login"
+              background="none"
+              color="white"
+              position="relative"
+              right="0px"
+            >
+              <Icon
+                as={ArrowBackIcon}
+                color="#7C7C8A"
+                _hover={{ svg: { fill: "black" } }}
+                boxSize={8}
+              />
+            </Box>
+            <Image
+              margin="auto"
+              position="relative"
+              right="16px"
+              src="/dtmoney-logo.svg"
+              alt="DT Money Logo"
+            />
           </Box>
           <VStack spacing={10} w="100%">
             <VStack spacing={4} w="100%">
+              <Input
+                paddingY={6}
+                variant="filled"
+                bg="#121214"
+                placeholder="Nome"
+              />
               <Input
                 paddingY={6}
                 variant="filled"
@@ -64,8 +88,33 @@ export default function Login() {
                   placeholder="Senha"
                 />
                 <InputRightElement width="4.5rem">
-                  <Button background="none" onClick={handleClick}>
+                  <Button
+                    background="none"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
                     {showPassword ? (
+                      <Icon color="#7C7C8A" as={ViewOffIcon} />
+                    ) : (
+                      <Icon color="#7C7C8A" as={ViewIcon} />
+                    )}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+              <InputGroup size="md">
+                <Input
+                  pr="4.5rem"
+                  bg="#121214"
+                  paddingY={6}
+                  variant="filled"
+                  type={showRepeatPassword ? "text" : "password"}
+                  placeholder="Repita a senha"
+                />
+                <InputRightElement width="4.5rem">
+                  <Button
+                    background="none"
+                    onClick={() => setShowRepeatPassword(!showRepeatPassword)}
+                  >
+                    {showRepeatPassword ? (
                       <Icon color="#7C7C8A" as={ViewOffIcon} />
                     ) : (
                       <Icon color="#7C7C8A" as={ViewIcon} />
@@ -85,25 +134,9 @@ export default function Login() {
                   transform: "scale(0.98)",
                 }}
               >
-                Entrar
-              </Button>
-            </VStack>
-            <Divider borderColor="#29292E" />
-            <HStack align="center" justify="space-between" w="100%">
-              <Text color="#7C7C8A">Não possui uma conta ainda?</Text>
-
-              <Button
-                as={NextLink}
-                href="/register"
-                background="#29292E"
-                color="white"
-                paddingY={6}
-                paddingX={10}
-                variant="solid"
-              >
                 Cadastrar
               </Button>
-            </HStack>
+            </VStack>
           </VStack>
         </Box>
       </Container>
