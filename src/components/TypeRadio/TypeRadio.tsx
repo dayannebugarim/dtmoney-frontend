@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 
 interface TypeRadioProps {
   setType: Dispatch<SetStateAction<string>>;
+  value?: string
 }
 
 function RadioCard(props: any) {
@@ -41,7 +42,7 @@ function RadioCard(props: any) {
     </Box>
   );
 }
-export const TypeRadio = ({ setType }: TypeRadioProps) => {
+export const TypeRadio = ({ setType, value }: TypeRadioProps) => {
   const options = [
     {
       text: "Entrada",
@@ -61,6 +62,7 @@ export const TypeRadio = ({ setType }: TypeRadioProps) => {
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: "transactionType",
+    value: value,
     onChange: setType,
   });
 

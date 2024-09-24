@@ -1,6 +1,7 @@
 import page from "@/app/page";
 import {
   CreateTransactionParams,
+  EditTransactionParams,
   ListCategoriesParams,
   ListCategoriesResponse,
   SearchTransactionParams,
@@ -9,15 +10,8 @@ import {
 } from "./types";
 import api from "@/services/api";
 
-export const transactionsSummaryRequest = async (
-  userId: string,
-  token: string
-) => {
-  const { data: response } = await api.get(`/transaction/summary/${userId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const transactionsSummaryRequest = async (userId: string) => {
+  const { data: response } = await api.get(`/transaction/summary/${userId}`);
   return response as TransactionsSummaryResponse;
 };
 
@@ -26,14 +20,10 @@ export const searchTransactionRequest = async ({
   description,
   page,
   pageSize,
-  token,
 }: SearchTransactionParams) => {
   const params = { userId, description, page, pageSize };
   const { data: response } = await api.get("/transaction", {
     params,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
   return response as SearchTransactionResponse[];
 };
@@ -44,36 +34,44 @@ export const createTransactionRequest = async ({
   type,
   description,
   categoryId,
-  token,
 }: CreateTransactionParams) => {
-  const { data: response } = await api.post(
-    `/transaction`,
-    {
-      userId,
-      value,
-      type,
-      description,
-      categoryId,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const { data: response } = await api.post(`/transaction`, {
+    userId,
+    value,
+    type,
+    description,
+    categoryId,
+  });
   return response as { id: string };
 };
 
 export const listCategoriesRequest = async ({
   userId,
-  token,
 }: ListCategoriesParams) => {
   const params = { userId };
   const { data: response } = await api.get("/transaction/category", {
     params,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
   return response as ListCategoriesResponse[];
+};
+
+export const editTransactionRequest = async ({
+  id,
+  value,
+  type,
+  description,
+  categoryId,
+}: EditTransactionParams) => {
+  const { data: response } = await api.put(`/transaction/${id}`, {
+    value,
+    type,
+    description,
+    categoryId,
+  });
+  return response as { message: string };
+};
+
+export const deleteTransactionRequest = async (id: string) => {
+  const { data: response } = await api.delete(`/transaction/${id}`);
+  return response as { message: string };
 };

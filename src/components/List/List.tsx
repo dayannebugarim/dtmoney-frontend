@@ -10,13 +10,52 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { EditTransactionModal } from "./EditTransactionModal";
+import { useState } from "react";
+import { DeleteTransactionAlert } from "./DeleteTransactionAlert";
 
 interface ListProps {
   data: SearchTransactionResponse[];
 }
 
+interface TransactionData {
+  id: string;
+  value: number;
+  type: string;
+  description: string;
+  categoryId?: string;
+}
+
 export const List = ({ data }: ListProps) => {
+  const [transactionData, setTransactionData] = useState<TransactionData>(
+    {} as TransactionData
+  );
+  const {
+    isOpen: editIsOpen,
+    onOpen: editOnOpen,
+    onClose: editOnClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: deleteIsOpen,
+    onOpen: deleteOnOpen,
+    onClose: deleteOnClose,
+  } = useDisclosure();
+
+  const handleData = async (d: SearchTransactionResponse, type: "edit" | "del") => {
+    setTransactionData({
+      id: d.id,
+      value: d.value,
+      type: d.type,
+      description: d.description,
+      categoryId: d.category.id ?? undefined,
+    });
+
+    type === "edit" ? editOnOpen() : deleteOnOpen();
+  };
+
   return (
     <>
       <Box paddingY={6} rounded="md" w="100%">
@@ -67,6 +106,7 @@ export const List = ({ data }: ListProps) => {
                       icon={<EditIcon />}
                       bgColor="#29292E"
                       _hover={{ bg: "#323238" }}
+                      onClick={() => handleData(item, "edit")}
                     >
                       Editar
                     </MenuItem>
@@ -74,6 +114,7 @@ export const List = ({ data }: ListProps) => {
                       icon={<DeleteIcon />}
                       bgColor="#29292E"
                       _hover={{ bg: "#323238" }}
+                      onClick={() => handleData(item, "del")}
                     >
                       Excluir
                     </MenuItem>
@@ -84,6 +125,18 @@ export const List = ({ data }: ListProps) => {
           })}
         </VStack>
       </Box>
+
+      <EditTransactionModal
+        data={transactionData}
+        isOpen={editIsOpen}
+        onClose={editOnClose}
+      />
+
+      <DeleteTransactionAlert
+        id={transactionData.id}
+        isOpen={deleteIsOpen}
+        onClose={deleteOnClose}
+      />
     </>
   );
 };

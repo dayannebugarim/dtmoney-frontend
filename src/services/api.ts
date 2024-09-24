@@ -24,7 +24,6 @@ api.interceptors.response.use(
     const refreshToken = cookies["refreshToken"];
     const originalRequest = error.config;
 
-    // Se recebermos 401 e for devido a token expirado
     if (
       error.response.status === 401 &&
       !originalRequest._retry &&
@@ -36,23 +35,20 @@ api.interceptors.response.use(
         const { token: newToken, refreshToken: newRefreshToken } =
           await refreshTokenRequest(refreshToken);
 
-        // Atualiza os cookies com os novos tokens
         setCookie(null, "token", newToken, {
-          maxAge: 60 * 60 * 1, // 1 hora
+          maxAge: 60 * 60 * 1,
           path: "/",
         });
 
         if (newRefreshToken) {
           setCookie(null, "refreshToken", newRefreshToken.id, {
-            maxAge: 60 * 60 * 24 * 7, // 7 dias
+            maxAge: 60 * 60 * 24 * 7,
             path: "/",
           });
         }
 
-        // Atualiza a requisição original com o novo token
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
-        // Reenvia a requisição original com o novo token
         return api(originalRequest);
       } catch (err) {
         console.error("Error refreshing token", err);

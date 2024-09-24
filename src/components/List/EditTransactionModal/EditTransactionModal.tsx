@@ -13,54 +13,67 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { TypeRadio } from "../TypeRadio";
+import { TypeRadio } from "../../TypeRadio";
 import {
-  createTransactionRequest,
+  editTransactionRequest,
   listCategoriesRequest,
 } from "@/services/http/transaction";
 import { ListCategoriesResponse } from "@/services/http/transaction/types";
+import { useAuthContext } from "@/contexts/AuthContext";
 
-interface NewTransactionModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  userId?: string;
+interface Data {
+  id: string;
+  value: number;
+  type: string;
+  description: string;
+  categoryId?: string;
 }
 
-export const NewTransactionModal = ({
+interface EditTransactionModalProps {
+  data: Data;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const EditTransactionModal = ({
+  data,
   isOpen,
   onClose,
-  userId,
-}: NewTransactionModalProps) => {
-  const [description, setDescription] = useState("");
-  const [value, setValue] = useState<number>();
+}: EditTransactionModalProps) => {
+  const { user } = useAuthContext();
+  const [description, setDescription] = useState<string>("");
+  const [value, setValue] = useState<number>(0);
   const [categories, setCategories] = useState<ListCategoriesResponse[]>([]);
-  const [categoryId, setCategoryId] = useState<string>();
-  const [type, setType] = useState("");
+  const [categoryId, setCategoryId] = useState<string | undefined>("");
+  const [type, setType] = useState<string>("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function getCategories() {
-      if (!userId || !isOpen) return;
+      if (!user?.id) return;
 
-      const response = await listCategoriesRequest({ userId });
-
+      const response = await listCategoriesRequest({ userId: user?.id });
       setCategories(response);
+      setDescription(data.description);
+      setValue(data.value);
+      setCategoryId(data.categoryId);
+      setType(data.type);
     }
 
     getCategories();
-  }, [userId, isOpen]);
+  }, [user?.id, isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      if (!userId) return;
+      if (!user?.id) return;
 
-      await createTransactionRequest({
-        userId,
-        value: value ?? 0,
-        categoryId: categoryId ?? null,
+      await editTransactionRequest({
+        id: data.id,
+        value,
+        categoryId,
         description,
         type,
       });
@@ -68,10 +81,6 @@ export const NewTransactionModal = ({
       setError(error.message);
     } finally {
       setIsLoading(false);
-      setCategoryId("");
-      setDescription("");
-      setType("");
-      setValue(undefined);
       onClose();
     }
   };
@@ -88,7 +97,7 @@ export const NewTransactionModal = ({
           rounded="md"
           boxShadow="dark-lg"
         >
-          <ModalHeader>Nova transação</ModalHeader>
+          <ModalHeader>Editar transação</ModalHeader>
           <ModalCloseButton />
           <VStack spacing={10} w="100%">
             <form onSubmit={handleSubmit} style={{ width: "100%" }}>
@@ -140,7 +149,7 @@ export const NewTransactionModal = ({
                   </Select>
                 </FormControl>
                 <FormControl id="type">
-                  <TypeRadio setType={setType} />
+                  <TypeRadio setType={setType} value={type} />
                 </FormControl>
 
                 {error && (
@@ -163,7 +172,7 @@ export const NewTransactionModal = ({
                     transform: "scale(0.98)",
                   }}
                 >
-                  Cadastrar
+                  Salvar
                 </Button>
               </VStack>
             </form>

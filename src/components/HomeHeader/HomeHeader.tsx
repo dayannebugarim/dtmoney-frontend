@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { transactionsSummaryRequest } from "@/services/http/transaction";
 import { TransactionsSummaryResponse } from "@/services/http/transaction/types";
 import { NewTransactionModal } from "../NewTransactionModal";
-import { parseCookies } from "nookies";
 
 interface SummaryCard {
   title: string
@@ -17,24 +16,20 @@ interface SummaryCard {
 
 export const HomeHeader = () => {
   const { user } = useAuthContext();
-  console.log('user', user)
-  const cookies = parseCookies();
-  const token = cookies["token"];
-  console.log(token)
   const [summary, setSummary] = useState<TransactionsSummaryResponse>();
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     async function getSummaryData() {
-      if (!user?.id || !token) return
+      if (!user?.id) return
 
-      const response = await transactionsSummaryRequest(user?.id, token)
+      const response = await transactionsSummaryRequest(user?.id)
 
       setSummary(response)
     }
 
     getSummaryData()
-  }, [token, user?.id])
+  }, [user?.id])
 
   const cardsData: SummaryCard[] = [
     {
@@ -97,7 +92,7 @@ export const HomeHeader = () => {
         </HStack>
       </Box>
 
-      <NewTransactionModal isOpen={isOpen} onClose={onClose} userId={user?.id} token={token} />
+      <NewTransactionModal isOpen={isOpen} onClose={onClose} userId={user?.id} />
     </>
   );
 };

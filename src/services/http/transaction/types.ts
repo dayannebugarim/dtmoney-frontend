@@ -9,7 +9,6 @@ export interface SearchTransactionParams {
   description?: string;
   page?: number;
   pageSize?: number;
-  token: string;
 }
 
 export interface SearchTransactionResponse {
@@ -34,15 +33,21 @@ export interface CreateTransactionParams {
   type: string;
   description: string;
   categoryId?: string | null;
-  token: string;
 }
 
 export interface ListCategoriesParams {
   userId: string;
-  token: string;
 }
 
 export interface ListCategoriesResponse {
   id: string;
   name: string;
+}
+
+export interface EditTransactionParams {
+  id: string;
+  value?: number;
+  type?: string;
+  description?: string;
+  categoryId?: string;
 }
