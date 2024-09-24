@@ -11,6 +11,7 @@ import {
   Avatar,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import { destroyCookie } from "nookies";
 
 interface UserMenuProps {
   name: string | undefined;
@@ -22,8 +23,8 @@ export const UserMenu = ({ name, email, photo }: UserMenuProps) => {
   const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
+    destroyCookie(null, "token");
+    destroyCookie(null, "refreshToken");
     router.push("/login");
   };
 

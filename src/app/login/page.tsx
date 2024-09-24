@@ -21,6 +21,7 @@ import { useState } from "react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { signInRequest } from "@/services/http/auth";
+import { setCookie } from "nookies";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -34,13 +35,21 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    console.log(email, password)
+
     try {
       const response = await signInRequest({ email, password });
-      
+
       const { token, refreshToken } = response
-      localStorage.setItem("token", token);
-      localStorage.setItem("refreshToken", JSON.stringify(refreshToken));
+      setCookie(null, "token", token, {
+        maxAge: 60 * 20,
+        path: "/",
+      });
+      if (refreshToken) {
+        setCookie(null, "refreshToken", refreshToken.id, {
+          maxAge: 60 * 60 * 24 * 7,
+          path: "/",
+        });
+      }
 
       router.push("/");
     } catch (error: any) {

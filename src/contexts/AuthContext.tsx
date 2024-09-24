@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { parseCookies, destroyCookie } from "nookies";
 
 interface AuthContextData {
   user: { id: string; name: string; email: string } | null;
@@ -15,7 +16,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   } | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const cookies = parseCookies();
+    const token = cookies["token"];
     if (token) {
       const tokenPayload = JSON.parse(atob(token.split(".")[1]));
       setUser({
@@ -27,8 +29,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
+    destroyCookie(null, "token");
+    destroyCookie(null, "refreshToken");
     setUser(null);
   };
 

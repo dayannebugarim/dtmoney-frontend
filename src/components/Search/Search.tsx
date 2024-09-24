@@ -1,9 +1,18 @@
 import { SearchIcon } from "@chakra-ui/icons";
 import { Button, HStack, Input } from "@chakra-ui/react";
+import { Dispatch, SetStateAction, useState } from "react";
 
-interface SearchProps {}
+interface SearchProps {
+  setDescription: Dispatch<SetStateAction<string | undefined>>
+}
 
-export const Search = ({}: SearchProps) => {
+export const Search = ({ setDescription }: SearchProps) => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const handleSearch = () => {
+    setDescription(searchTerm);
+  };
+
   return (
     <>
       <HStack w="100%">
@@ -12,6 +21,8 @@ export const Search = ({}: SearchProps) => {
           variant="filled"
           bg="#121214"
           placeholder="Busque por uma transação"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
         <Button
           leftIcon={<SearchIcon />}
@@ -20,6 +31,7 @@ export const Search = ({}: SearchProps) => {
           variant="outline"
           paddingY={6}
           paddingX={10}
+          onClick={handleSearch}
         >
           <strong>Buscar</strong>
         </Button>

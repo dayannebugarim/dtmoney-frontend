@@ -1,15 +1,15 @@
 import { refreshTokenRequest } from "@/services/http/auth";
 import { useEffect } from "react";
+import { parseCookies, setCookie, destroyCookie } from "nookies";
 
 export function useAuth() {
   useEffect(() => {
     const refreshToken = async () => {
-      const storedToken = localStorage.getItem("token");
-      const storedRefreshToken = JSON.parse(
-        localStorage.getItem("refreshToken") || "{}"
-      );
+      const cookies = parseCookies();
+      const storedToken = cookies["token"];
+      const storedRefreshToken = cookies["refreshToken"];
 
-      if (!storedToken || !storedRefreshToken.id) return;
+      if (!storedToken || !storedRefreshToken) return;
 
       const tokenPayload = JSON.parse(atob(storedToken.split(".")[1]));
       const isTokenExpired = tokenPayload.exp * 1000 < Date.now();
@@ -17,23 +17,30 @@ export function useAuth() {
       if (isTokenExpired) {
         try {
           const { token, refreshToken } = await refreshTokenRequest(
-            storedRefreshToken.id
+            storedRefreshToken
           );
 
+          setCookie(null, "token", token, {
+            maxAge: 60 * 20,
+            path: "/",
+          });
           if (refreshToken) {
-            localStorage.setItem("refreshToken", JSON.stringify(refreshToken));
+            setCookie(null, "refreshToken", refreshToken.id, {
+              maxAge: 60 * 60 * 24 * 7,
+              path: "/",
+            });
           }
-
-          localStorage.setItem("token", token);
         } catch (error) {
           console.error("Error renewing token: ", error);
+          destroyCookie(null, "token");
+          destroyCookie(null, "refreshToken");
         }
       }
     };
 
     refreshToken();
 
-    const interval = setInterval(refreshToken, 1000 * 60 * 15);
+    const interval = setInterval(refreshToken, 1000 * 60 * 20);
 
     return () => clearInterval(interval);
   }, []);

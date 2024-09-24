@@ -1,4 +1,5 @@
-import { HamburgerIcon, AddIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { SearchTransactionResponse } from "@/services/http/transaction/types";
+import { HamburgerIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   HStack,
@@ -12,13 +13,7 @@ import {
 } from "@chakra-ui/react";
 
 interface ListProps {
-  data: {
-    title: string;
-    value: number;
-    type: string;
-    category: string;
-    date: string;
-  }[];
+  data: SearchTransactionResponse[];
 }
 
 export const List = ({ data }: ListProps) => {
@@ -27,8 +22,8 @@ export const List = ({ data }: ListProps) => {
       <Box paddingY={6} rounded="md" w="100%">
         <VStack w="100%" maxHeight="600px" overflow="scroll">
           {data.map((item) => {
-            const valueColor = item.type === "income" ? "#00B37E" : "#F75A68";
-            const valuePrefix = item.type === "income" ? "" : "- ";
+            const valueColor = item.type === "Income" ? "#00B37E" : "#F75A68";
+            const valuePrefix = item.type === "Income" ? "" : "- ";
             const value = `${valuePrefix}${item.value.toLocaleString("pt-BR", {
               style: "currency",
               currency: "BRL",
@@ -46,14 +41,15 @@ export const List = ({ data }: ListProps) => {
                 w="100%"
                 rounded="md"
                 spacing={10}
+                key={item.id}
               >
                 <Text color="#C4C4CC" minW="200px">
-                  {item.title}
+                  {item.description}
                 </Text>
                 <Text color={valueColor} minW="120px">
                   {value}
                 </Text>
-                <Text color="#C4C4CC">{item.category}</Text>
+                <Text color="#C4C4CC">{item.category.name}</Text>
                 <Text color="#C4C4CC">{date}</Text>
 
                 <Menu>
@@ -68,14 +64,14 @@ export const List = ({ data }: ListProps) => {
                   />
                   <MenuList bgColor="#29292E" border="none" boxShadow="dark-lg">
                     <MenuItem
-                      icon={<AddIcon />}
+                      icon={<EditIcon />}
                       bgColor="#29292E"
                       _hover={{ bg: "#323238" }}
                     >
                       Editar
                     </MenuItem>
                     <MenuItem
-                      icon={<ExternalLinkIcon />}
+                      icon={<DeleteIcon />}
                       bgColor="#29292E"
                       _hover={{ bg: "#323238" }}
                     >

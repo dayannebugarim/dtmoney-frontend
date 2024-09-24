@@ -1,34 +1,58 @@
-import { Box, Button, HStack, Image } from "@chakra-ui/react";
+"use client"
+import { Box, Button, HStack, Image, useDisclosure } from "@chakra-ui/react";
 import { Card } from "./Card";
 import { UserMenu } from "./UserMenu";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { useEffect, useState } from "react";
+import { transactionsSummaryRequest } from "@/services/http/transaction";
+import { TransactionsSummaryResponse } from "@/services/http/transaction/types";
+import { NewTransactionModal } from "../NewTransactionModal";
+import { parseCookies } from "nookies";
 
-const cardsData = [
-  {
-    title: "Entradas",
-    icon: "icons/income-icon.svg",
-    value: 17400,
-  },
-  {
-    title: "Saídas",
-    icon: "icons/expense-icon.svg",
-    value: 1259,
-  },
-  {
-    title: "Total",
-    icon: "icons/money-icon.svg",
-    value: 16141,
-  },
-];
-
-const userData = {
-  name: "John Doe",
-  email: "john@nivo.video",
-  photo: "https://bit.ly/kent-c-dodds",
-};
+interface SummaryCard {
+  title: string
+  icon: string
+  value: number
+}
 
 export const HomeHeader = () => {
   const { user } = useAuthContext();
+  console.log('user', user)
+  const cookies = parseCookies();
+  const token = cookies["token"];
+  console.log(token)
+  const [summary, setSummary] = useState<TransactionsSummaryResponse>();
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  useEffect(() => {
+    async function getSummaryData() {
+      if (!user?.id || !token) return
+
+      const response = await transactionsSummaryRequest(user?.id, token)
+
+      setSummary(response)
+    }
+
+    getSummaryData()
+  }, [token, user?.id])
+
+  const cardsData: SummaryCard[] = [
+    {
+      title: "Entradas",
+      icon: "icons/income-icon.svg",
+      value: summary?.totalIncome ?? 0,
+    },
+    {
+      title: "Saídas",
+      icon: "icons/expense-icon.svg",
+      value: summary?.totalExpense ?? 0,
+    },
+    {
+      title: "Total",
+      icon: "icons/money-icon.svg",
+      value: summary?.total ?? 0,
+    },
+  ]
 
   return (
     <>
@@ -40,6 +64,7 @@ export const HomeHeader = () => {
           spacing={6}
         >
           <Button
+            onClick={onOpen}
             background="#00875F"
             color="white"
             paddingY={6}
@@ -71,6 +96,8 @@ export const HomeHeader = () => {
           })}
         </HStack>
       </Box>
+
+      <NewTransactionModal isOpen={isOpen} onClose={onClose} userId={user?.id} token={token} />
     </>
   );
 };

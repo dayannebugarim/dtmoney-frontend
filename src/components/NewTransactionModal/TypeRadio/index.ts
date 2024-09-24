@@ -1,0 +1,1 @@
+export { TypeRadio } from "./TypeRadio";
