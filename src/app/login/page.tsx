@@ -22,6 +22,7 @@ import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { signInRequest } from "@/services/http/auth";
 import { setCookie } from "nookies";
+import { ButtonComponent } from "@/components/Button";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -129,39 +130,29 @@ export default function Login() {
                     {error}
                   </Alert>
                 )}
-                <Button
+                <ButtonComponent
                   isLoading={isLoading}
+                  variant="primary"
                   type="submit"
                   marginTop={8}
-                  background="#00875F"
-                  color="white"
-                  w="100%"
+                  width="100%"
                   paddingY={6}
-                  variant="solid"
-                  _hover={{ bg: "#059A6E" }}
-                  _active={{
-                    transform: "scale(0.98)",
-                  }}
                 >
                   Entrar
-                </Button>
+                </ButtonComponent>
               </VStack>
             </form>
             <Divider borderColor="#29292E" />
             <HStack align="center" justify="space-between" w="100%">
               <Text color="#7C7C8A">Não possui uma conta ainda?</Text>
 
-              <Button
+              <ButtonComponent
                 as={NextLink}
                 href="/register"
-                background="#29292E"
-                color="white"
-                paddingY={6}
-                paddingX={10}
-                variant="solid"
+                variant="secondary"
               >
                 Cadastrar
-              </Button>
+              </ButtonComponent>
             </HStack>
           </VStack>
         </Box>

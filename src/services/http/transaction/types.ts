@@ -51,3 +51,8 @@ export interface EditTransactionParams {
   description?: string;
   categoryId?: string;
 }
+
+export interface CreateCategoryParams {
+  userId: string;
+  name: string;
+}

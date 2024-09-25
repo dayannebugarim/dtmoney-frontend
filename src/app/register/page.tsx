@@ -13,6 +13,7 @@ import {
 import { ArrowBackIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import NextLink from "next/link";
+import { ButtonComponent } from "@/components/Button";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -122,20 +123,13 @@ export default function Register() {
                   </Button>
                 </InputRightElement>
               </InputGroup>
-              <Button
+              <ButtonComponent
+                variant="primary"
                 marginTop={8}
-                background="#00875F"
-                color="white"
                 w="100%"
-                paddingY={6}
-                variant="solid"
-                _hover={{ bg: "#059A6E" }}
-                _active={{
-                  transform: "scale(0.98)",
-                }}
               >
                 Cadastrar
-              </Button>
+              </ButtonComponent>
             </VStack>
           </VStack>
         </Box>

@@ -36,7 +36,7 @@ function RadioCard(props: any) {
         px={5}
         py={3}
       >
-        <Image src={props.icon} boxSize="24px" marginRight="8px" />
+        <Image src={props.icon} boxSize="24px" marginRight="8px" alt="Transaction type icon" />
         {props.children}
       </Box>
     </Box>

@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { deleteTransactionRequest } from "@/services/http/transaction";
 import React, { useState } from "react";
+import { ButtonComponent } from "@/components/Button";
 
 interface DeleteTransactionAlertProps {
   id: string;
@@ -58,24 +59,21 @@ export const DeleteTransactionAlert = ({
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button
+              <ButtonComponent
+                variant="secondary"
                 ref={cancelRef}
                 onClick={onClose}
-                bg="#29292E"
-                color="#C4C4CC"
-                _hover={{ bg: "#313136" }}
               >
                 Cancelar
-              </Button>
-              <Button
+              </ButtonComponent>
+              <ButtonComponent
+                variant="red"
                 isLoading={isLoading}
-                colorScheme="red"
                 onClick={handleSubmit}
                 ml={3}
-                _hover={{ bg: "#F75A68" }}
               >
                 Deletar
-              </Button>
+              </ButtonComponent>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>

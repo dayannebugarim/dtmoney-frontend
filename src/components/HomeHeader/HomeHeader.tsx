@@ -1,5 +1,5 @@
-"use client"
-import { Box, Button, HStack, Image, useDisclosure } from "@chakra-ui/react";
+"use client";
+import { Box, HStack, Image, useDisclosure } from "@chakra-ui/react";
 import { Card } from "./Card";
 import { UserMenu } from "./UserMenu";
 import { useAuthContext } from "@/contexts/AuthContext";
@@ -7,29 +7,30 @@ import { useEffect, useState } from "react";
 import { transactionsSummaryRequest } from "@/services/http/transaction";
 import { TransactionsSummaryResponse } from "@/services/http/transaction/types";
 import { NewTransactionModal } from "../NewTransactionModal";
+import { ButtonComponent } from "../Button";
 
 interface SummaryCard {
-  title: string
-  icon: string
-  value: number
+  title: string;
+  icon: string;
+  value: number;
 }
 
 export const HomeHeader = () => {
   const { user } = useAuthContext();
   const [summary, setSummary] = useState<TransactionsSummaryResponse>();
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     async function getSummaryData() {
-      if (!user?.id) return
+      if (!user?.id) return;
 
-      const response = await transactionsSummaryRequest(user?.id)
+      const response = await transactionsSummaryRequest(user?.id);
 
-      setSummary(response)
+      setSummary(response);
     }
 
-    getSummaryData()
-  }, [user?.id])
+    getSummaryData();
+  }, [user?.id]);
 
   const cardsData: SummaryCard[] = [
     {
@@ -47,7 +48,7 @@ export const HomeHeader = () => {
       icon: "icons/money-icon.svg",
       value: summary?.total ?? 0,
     },
-  ]
+  ];
 
   return (
     <>
@@ -58,24 +59,11 @@ export const HomeHeader = () => {
           align="center"
           spacing={6}
         >
-          <Button
-            onClick={onOpen}
-            background="#00875F"
-            color="white"
-            paddingY={6}
-            variant="solid"
-            _hover={{ bg: "#059A6E" }}
-            _active={{
-              transform: "scale(0.98)",
-            }}
-          >
+          <ButtonComponent onClick={onOpen} variant="primary">
             Nova Transação
-          </Button>
+          </ButtonComponent>
           <Image src="/dtmoney-logo.svg" alt="DT Money Logo" />
-          <UserMenu
-            name={user?.name}
-            email={user?.email}
-          />
+          <UserMenu name={user?.name} email={user?.email} />
         </HStack>
         <HStack spacing={6}>
           {cardsData.map((data, index) => {
@@ -92,7 +80,7 @@ export const HomeHeader = () => {
         </HStack>
       </Box>
 
-      <NewTransactionModal isOpen={isOpen} onClose={onClose} userId={user?.id} />
+      <NewTransactionModal isOpen={isOpen} onClose={onClose} />
     </>
   );
 };

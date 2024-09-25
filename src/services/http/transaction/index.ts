@@ -1,5 +1,5 @@
-import page from "@/app/page";
 import {
+  CreateCategoryParams,
   CreateTransactionParams,
   EditTransactionParams,
   ListCategoriesParams,
@@ -74,4 +74,15 @@ export const editTransactionRequest = async ({
 export const deleteTransactionRequest = async (id: string) => {
   const { data: response } = await api.delete(`/transaction/${id}`);
   return response as { message: string };
+};
+
+export const createCategoryRequest = async ({
+  userId,
+  name,
+}: CreateCategoryParams) => {
+  const { data: response } = await api.post(`/transaction/category`, {
+    userId,
+    name,
+  });
+  return response as { id: string };
 };

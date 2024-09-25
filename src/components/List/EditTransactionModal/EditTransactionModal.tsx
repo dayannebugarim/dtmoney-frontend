@@ -1,7 +1,6 @@
 import {
   Alert,
   AlertIcon,
-  Button,
   FormControl,
   Input,
   Modal,
@@ -10,16 +9,24 @@ import {
   ModalHeader,
   ModalOverlay,
   VStack,
-  Select,
 } from "@chakra-ui/react";
+import { CreatableSelect, SingleValue } from "chakra-react-select";
 import { useEffect, useState } from "react";
 import { TypeRadio } from "../../TypeRadio";
 import {
+  createCategoryRequest,
   editTransactionRequest,
   listCategoriesRequest,
 } from "@/services/http/transaction";
 import { ListCategoriesResponse } from "@/services/http/transaction/types";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { ButtonComponent } from "@/components/Button";
+import { chakraSelectStyles } from "@/styles/selectTheme";
+
+type OptionType = {
+  label: string;
+  value: string;
+};
 
 interface Data {
   id: string;
@@ -48,8 +55,10 @@ export const EditTransactionModal = ({
   const [type, setType] = useState<string>("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSelectLoading, setSelectIsLoading] = useState(false);
 
   useEffect(() => {
+    setSelectIsLoading(true);
     async function getCategories() {
       if (!user?.id) return;
 
@@ -59,6 +68,7 @@ export const EditTransactionModal = ({
       setValue(data.value);
       setCategoryId(data.categoryId);
       setType(data.type);
+      setSelectIsLoading(false);
     }
 
     getCategories();
@@ -85,6 +95,39 @@ export const EditTransactionModal = ({
     }
   };
 
+  const handleChange = (newValue: unknown) => {
+    if (newValue && typeof newValue === "object" && "value" in newValue) {
+      const selectedOption = newValue as SingleValue<OptionType>;
+      setCategoryId(selectedOption?.value);
+    }
+  };
+
+  const handleCreateCategory = async (inputValue: string) => {
+    setSelectIsLoading(true);
+    try {
+      if (!user?.id) return;
+
+      const { id } = await createCategoryRequest({
+        userId: user?.id,
+        name: inputValue.trim(),
+      });
+
+      setCategories((prev) => [{ id, name: inputValue.trim() }, ...prev]);
+      setCategoryId(id);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setSelectIsLoading(false);
+    }
+  };
+
+  const options = categories.map((category) => {
+    return {
+      value: category.id,
+      label: category.name,
+    };
+  });
+  console.log(categoryId);
   return (
     <>
       <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
@@ -97,7 +140,9 @@ export const EditTransactionModal = ({
           rounded="md"
           boxShadow="dark-lg"
         >
-          <ModalHeader>Editar transação</ModalHeader>
+          <ModalHeader paddingLeft={0} paddingTop={0} paddingBottom={6}>
+            Editar transação
+          </ModalHeader>
           <ModalCloseButton />
           <VStack spacing={10} w="100%">
             <form onSubmit={handleSubmit} style={{ width: "100%" }}>
@@ -110,7 +155,7 @@ export const EditTransactionModal = ({
                     paddingY={6}
                     variant="filled"
                     bg="#121214"
-                    placeholder="Descrição"
+                    placeholder="Adicione uma descrição"
                   />
                 </FormControl>
                 <FormControl id="value">
@@ -122,31 +167,23 @@ export const EditTransactionModal = ({
                     paddingY={6}
                     variant="filled"
                     bg="#121214"
-                    placeholder="Preço"
+                    placeholder="Digite o valor"
                   />
                 </FormControl>
                 <FormControl id="category">
-                  <Select
+                  <CreatableSelect
                     size="lg"
-                    onChange={(e) => setCategoryId(e.target.value)}
                     variant="filled"
-                    bg="#121214"
-                    placeholder="Categoria"
-                    color="gray.500"
-                    fontSize="1rem"
-                  >
-                    {categories.map((category) => {
-                      return (
-                        <option
-                          key={category.id}
-                          value={category.id}
-                          style={{ background: "#29292E", color: "#7C7C8A" }}
-                        >
-                          {category.name}
-                        </option>
-                      );
-                    })}
-                  </Select>
+                    isClearable
+                    isDisabled={isSelectLoading}
+                    onChange={handleChange}
+                    onCreateOption={handleCreateCategory}
+                    isLoading={isSelectLoading}
+                    selectedOptionStyle="check"
+                    placeholder="Crie ou selecione uma categoria"
+                    options={options}
+                    chakraStyles={chakraSelectStyles}
+                  />
                 </FormControl>
                 <FormControl id="type">
                   <TypeRadio setType={setType} value={type} />
@@ -158,22 +195,15 @@ export const EditTransactionModal = ({
                     {error}
                   </Alert>
                 )}
-                <Button
+                <ButtonComponent
+                  variant="primary"
                   isLoading={isLoading}
                   type="submit"
                   marginTop={8}
-                  background="#00875F"
-                  color="white"
                   w="100%"
-                  paddingY={6}
-                  variant="solid"
-                  _hover={{ bg: "#059A6E" }}
-                  _active={{
-                    transform: "scale(0.98)",
-                  }}
                 >
                   Salvar
-                </Button>
+                </ButtonComponent>
               </VStack>
             </form>
           </VStack>
