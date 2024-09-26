@@ -1,22 +1,28 @@
-import { SearchTransactionResponse } from "@/services/http/transaction/types";
 import { createContext, useContext, useState } from "react";
 
-const TransactionContext = createContext<any>(null);
+interface TransactionContextData {
+  hasUpdated: boolean;
+  setHasUpdated: (value: boolean) => void;
+}
+
+const TransactionContext = createContext<TransactionContextData | undefined>(
+  undefined
+);
 
 export const TransactionProvider = ({ children }: { children: React.ReactNode }) => {
-  const [transactions, setTransactions] = useState<SearchTransactionResponse[]>([]);
-
-  const addTransaction = (transaction: SearchTransactionResponse) => {
-    setTransactions(prev => [...prev, transaction]);
-  };
+  const [hasUpdated, setHasUpdated] = useState(false);
 
   return (
-    <TransactionContext.Provider value={{ transactions, addTransaction }}>
+    <TransactionContext.Provider value={{ hasUpdated, setHasUpdated }}>
       {children}
     </TransactionContext.Provider>
   );
 };
 
 export const useTransactionContext = () => {
-  return useContext(TransactionContext);
+  const context = useContext(TransactionContext);
+  if (!context) {
+    throw new Error("useTransactionContext must be used within a TransactionProvider");
+  }
+  return context;
 };

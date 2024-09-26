@@ -1,6 +1,7 @@
 import { List } from "@/components/List";
 import { Search } from "@/components/Search";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { useTransactionContext } from "@/contexts/TransactionsContext";
 import { searchTransactionRequest } from "@/services/http/transaction";
 import { SearchTransactionResponse } from "@/services/http/transaction/types";
 import { Box } from "@chakra-ui/react";
@@ -14,6 +15,7 @@ export const MainSection = () => {
     []
   );
   const [description, setDescription] = useState<string>();
+  const { hasUpdated } = useTransactionContext();
 
   useEffect(() => {
     async function getTransactionsData() {
@@ -30,7 +32,7 @@ export const MainSection = () => {
     }
 
     getTransactionsData();
-  }, [user?.id, description]);
+  }, [user?.id, description, hasUpdated]);
 
   return (
     <>

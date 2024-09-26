@@ -8,6 +8,7 @@ import { transactionsSummaryRequest } from "@/services/http/transaction";
 import { TransactionsSummaryResponse } from "@/services/http/transaction/types";
 import { NewTransactionModal } from "../NewTransactionModal";
 import { ButtonComponent } from "../Button";
+import { useTransactionContext } from "@/contexts/TransactionsContext";
 
 interface SummaryCard {
   title: string;
@@ -17,6 +18,7 @@ interface SummaryCard {
 
 export const HomeHeader = () => {
   const { user } = useAuthContext();
+  const { hasUpdated } = useTransactionContext();
   const [summary, setSummary] = useState<TransactionsSummaryResponse>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -30,7 +32,7 @@ export const HomeHeader = () => {
     }
 
     getSummaryData();
-  }, [user?.id]);
+  }, [user?.id, hasUpdated]);
 
   const cardsData: SummaryCard[] = [
     {

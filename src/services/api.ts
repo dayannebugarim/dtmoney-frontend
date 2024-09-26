@@ -36,7 +36,7 @@ api.interceptors.response.use(
           await refreshTokenRequest(refreshToken);
 
         setCookie(null, "token", newToken, {
-          maxAge: 60 * 60 * 1,
+          maxAge: 60 * 20,
           path: "/",
         });
 

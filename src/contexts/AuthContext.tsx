@@ -3,9 +3,11 @@ import { parseCookies, destroyCookie } from "nookies";
 
 interface AuthContextData {
   user: { id: string; name: string; email: string } | null;
+  setUser: React.Dispatch<
+    React.SetStateAction<{ id: string; name: string; email: string } | null>
+  >;
   logout: () => void;
 }
-
 const AuthContext = createContext<AuthContextData | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -35,7 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, logout }}>
+    <AuthContext.Provider value={{ user, setUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

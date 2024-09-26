@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation";
 import { signInRequest } from "@/services/http/auth";
 import { setCookie } from "nookies";
 import { ButtonComponent } from "@/components/Button";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -32,6 +33,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const handleClick = () => setShowPassword(!showPassword);
   const router = useRouter();
+  const { setUser } = useAuthContext();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +42,7 @@ export default function Login() {
     try {
       const response = await signInRequest({ email, password });
 
-      const { token, refreshToken } = response
+      const { token, refreshToken } = response;
       setCookie(null, "token", token, {
         maxAge: 60 * 20,
         path: "/",
@@ -51,6 +53,13 @@ export default function Login() {
           path: "/",
         });
       }
+
+      const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+      setUser({
+        id: tokenPayload.id,
+        name: tokenPayload.name,
+        email: tokenPayload.email,
+      });
 
       router.push("/");
     } catch (error: any) {
@@ -113,8 +122,12 @@ export default function Login() {
                       type={showPassword ? "text" : "password"}
                       placeholder="Senha"
                     />
-                    <InputRightElement width="4.5rem">
-                      <Button background="none" onClick={handleClick}>
+                    <InputRightElement width="4.5rem" height="52px">
+                      <Button
+                        background="none"
+                        onClick={handleClick}
+                        _hover={{ bg: "none" }}
+                      >
                         {showPassword ? (
                           <Icon color="#7C7C8A" as={ViewOffIcon} />
                         ) : (
@@ -125,7 +138,15 @@ export default function Login() {
                   </InputGroup>
                 </FormControl>
                 {error && (
-                  <Alert status="error">
+                  <Alert
+                    status="error"
+                    borderRadius="md"
+                    marginBottom={-8}
+                    background="none"
+                    color="#F75A68"
+                    padding={2}
+                    fontSize="0.9rem"
+                  >
                     <AlertIcon />
                     {error}
                   </Alert>

@@ -22,6 +22,7 @@ import { ButtonComponent } from "../Button";
 import { CreatableSelect, SingleValue } from "chakra-react-select";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { chakraSelectStyles } from "@/styles/selectTheme";
+import { useTransactionContext } from "@/contexts/TransactionsContext";
 
 type OptionType = {
   label: string;
@@ -38,6 +39,7 @@ export const NewTransactionModal = ({
   onClose,
 }: NewTransactionModalProps) => {
   const { user } = useAuthContext();
+  const { setHasUpdated } = useTransactionContext();
   const [description, setDescription] = useState("");
   const [value, setValue] = useState<number>();
   const [categories, setCategories] = useState<ListCategoriesResponse[]>([]);
@@ -62,6 +64,7 @@ export const NewTransactionModal = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setHasUpdated(false);
     try {
       if (!user?.id) return;
 
@@ -72,6 +75,8 @@ export const NewTransactionModal = ({
         description,
         type,
       });
+
+      setHasUpdated(true);
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -110,6 +115,13 @@ export const NewTransactionModal = ({
     }
   };
 
+  const handleClose = () => {
+    setCategoryId("");
+    setDescription("");
+    setType("");
+    setValue(undefined);
+  }
+
   const options = categories.map((category) => {
     return {
       value: category.id,
@@ -132,7 +144,7 @@ export const NewTransactionModal = ({
           <ModalHeader paddingLeft={0} paddingTop={0} paddingBottom={6}>
             Nova transação
           </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton onClick={handleClose} />
           <VStack spacing={10} w="100%">
             <form onSubmit={handleSubmit} style={{ width: "100%" }}>
               <VStack spacing={4} w="100%">

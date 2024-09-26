@@ -22,6 +22,7 @@ import { ListCategoriesResponse } from "@/services/http/transaction/types";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { ButtonComponent } from "@/components/Button";
 import { chakraSelectStyles } from "@/styles/selectTheme";
+import { useTransactionContext } from "@/contexts/TransactionsContext";
 
 type OptionType = {
   label: string;
@@ -48,6 +49,7 @@ export const EditTransactionModal = ({
   onClose,
 }: EditTransactionModalProps) => {
   const { user } = useAuthContext();
+  const { setHasUpdated } = useTransactionContext();
   const [description, setDescription] = useState<string>("");
   const [value, setValue] = useState<number>(0);
   const [categories, setCategories] = useState<ListCategoriesResponse[]>([]);
@@ -72,11 +74,12 @@ export const EditTransactionModal = ({
     }
 
     getCategories();
-  }, [user?.id, isOpen]);
+  }, [user?.id, isOpen, data]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setHasUpdated(false);
     try {
       if (!user?.id) return;
 
@@ -87,6 +90,8 @@ export const EditTransactionModal = ({
         description,
         type,
       });
+
+      setHasUpdated(true);
     } catch (error: any) {
       setError(error.message);
     } finally {

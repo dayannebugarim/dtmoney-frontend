@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthProvider } from "@/contexts/AuthContext";
+import { TransactionProvider } from "@/contexts/TransactionsContext";
 import { useAuth } from "@/hooks/useAuth";
 import theme from "@/styles/theme";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -10,7 +11,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <ChakraProvider theme={theme}>
-      <AuthProvider>{children}</AuthProvider>
+      <AuthProvider>
+        <TransactionProvider>{children}</TransactionProvider>
+      </AuthProvider>
     </ChakraProvider>
   );
 }
