@@ -132,7 +132,7 @@ export const EditTransactionModal = ({
       label: category.name,
     };
   });
-  console.log(categoryId);
+
   return (
     <>
       <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>

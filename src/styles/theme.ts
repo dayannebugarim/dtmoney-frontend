@@ -1,10 +1,11 @@
 import { extendTheme } from "@chakra-ui/react";
+import { chakraPaginationStyles } from "./paginationTheme";
 
 const themes = {
   styles: {
     global: {
       'html, body': {
-        background: '#121214b3',
+        background: '#202024',
         color: "#ffffff",
         height: '100%'
       },
@@ -35,6 +36,7 @@ const themes = {
       }
     },
   },
+  components: {...chakraPaginationStyles.components}
 }
 
 const theme = extendTheme(themes);

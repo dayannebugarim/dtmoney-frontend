@@ -12,7 +12,7 @@ export const Card = ({ title, icon, value, green }: CardProps) => {
 
   return (
     <>
-      <Container
+      <Box
         backgroundColor={bgColor}
         padding={6}
         rounded="md"
@@ -30,7 +30,7 @@ export const Card = ({ title, icon, value, green }: CardProps) => {
             })}
           </Text>
         </Box>
-      </Container>
+      </Box>
     </>
   );
 };

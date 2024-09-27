@@ -76,6 +76,8 @@ export default function Login() {
         display="flex"
         alignItems="center"
         justifyContent="center"
+        bg="#121214b3"
+        minWidth="100vw"
       >
         <Box
           bg="#202024"

@@ -1,4 +1,4 @@
-import { SearchTransactionResponse } from "@/services/http/transaction/types";
+import { Transaction } from "@/services/http/transaction/types";
 import { HamburgerIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -17,7 +17,7 @@ import { useState } from "react";
 import { DeleteTransactionAlert } from "./DeleteTransactionAlert";
 
 interface ListProps {
-  data: SearchTransactionResponse[];
+  data: Transaction[];
 }
 
 interface TransactionData {
@@ -44,7 +44,7 @@ export const List = ({ data }: ListProps) => {
     onClose: deleteOnClose,
   } = useDisclosure();
 
-  const handleData = async (d: SearchTransactionResponse, type: "edit" | "del") => {
+  const handleData = async (d: Transaction, type: "edit" | "del") => {
     setTransactionData({
       id: d.id,
       value: d.value,
@@ -59,7 +59,7 @@ export const List = ({ data }: ListProps) => {
   return (
     <>
       <Box paddingY={6} rounded="md" w="100%">
-        <VStack w="100%" maxHeight="600px" overflow="scroll">
+        <VStack w="100%" maxHeight="600px">
           {data.map((item) => {
             const valueColor = item.type === "Income" ? "#00B37E" : "#F75A68";
             const valuePrefix = item.type === "Income" ? "" : "- ";
@@ -79,6 +79,8 @@ export const List = ({ data }: ListProps) => {
                 paddingY={6}
                 w="100%"
                 rounded="md"
+                border="1px"
+                borderColor="#2e2e35"
                 spacing={10}
                 key={item.id}
               >

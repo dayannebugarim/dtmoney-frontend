@@ -25,7 +25,7 @@ export const searchTransactionRequest = async ({
   const { data: response } = await api.get("/transaction", {
     params,
   });
-  return response as SearchTransactionResponse[];
+  return response as SearchTransactionResponse;
 };
 
 export const createTransactionRequest = async ({

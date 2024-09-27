@@ -33,7 +33,7 @@ export const UserMenu = ({ name, email, photo }: UserMenuProps) => {
       <Menu direction="rtl">
         <MenuButton>
           <HStack spacing={4} padding={2}>
-            <VStack align="end" justify="center">
+            <VStack align="end" justify="center" spacing={1}>
               <Text as="b">{name}</Text>
               <Text color="#7C7C8A">{email}</Text>
             </VStack>

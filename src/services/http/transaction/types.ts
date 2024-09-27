@@ -11,7 +11,7 @@ export interface SearchTransactionParams {
   pageSize?: number;
 }
 
-export interface SearchTransactionResponse {
+export interface Transaction {
   id: string;
   category: {
     id: string | null;
@@ -25,6 +25,11 @@ export interface SearchTransactionResponse {
   value: number;
   description: string;
   type: "Income" | "Expense";
+}
+
+export interface SearchTransactionResponse {
+  transactions: Transaction[]
+  totalPages: number
 }
 
 export interface CreateTransactionParams {

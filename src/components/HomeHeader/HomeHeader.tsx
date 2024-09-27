@@ -1,5 +1,5 @@
 "use client";
-import { Box, HStack, Image, useDisclosure } from "@chakra-ui/react";
+import { Box, HStack, Image, useDisclosure, VStack } from "@chakra-ui/react";
 import { Card } from "./Card";
 import { UserMenu } from "./UserMenu";
 import { useAuthContext } from "@/contexts/AuthContext";
@@ -54,12 +54,13 @@ export const HomeHeader = () => {
 
   return (
     <>
-      <Box backgroundColor="#121214">
+      <VStack backgroundColor="#121214" justify="space-between" paddingX="8rem">
         <HStack
           display="flex"
           justify="space-between"
           align="center"
-          spacing={6}
+          paddingY={4}
+          width="100%"
         >
           <ButtonComponent onClick={onOpen} variant="primary">
             Nova Transação
@@ -67,7 +68,13 @@ export const HomeHeader = () => {
           <Image src="/dtmoney-logo.svg" alt="DT Money Logo" />
           <UserMenu name={user?.name} email={user?.email} />
         </HStack>
-        <HStack spacing={6}>
+        <HStack
+          marginTop={-14}
+          top={16}
+          position="relative"
+          width="100%"
+          justify="space-between"
+        >
           {cardsData.map((data, index) => {
             return (
               <Card
@@ -80,7 +87,7 @@ export const HomeHeader = () => {
             );
           })}
         </HStack>
-      </Box>
+      </VStack>
 
       <NewTransactionModal isOpen={isOpen} onClose={onClose} />
     </>
