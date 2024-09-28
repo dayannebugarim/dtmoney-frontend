@@ -4,6 +4,10 @@ export interface TransactionsSummaryResponse {
   total: number;
 }
 
+export interface TransactionsYearSummaryResponse extends TransactionsSummaryResponse {
+  date: string;
+}
+
 export interface SearchTransactionParams {
   userId: string;
   description?: string;

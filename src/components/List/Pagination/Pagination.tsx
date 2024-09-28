@@ -1,4 +1,4 @@
-import { Box, Button, HStack, IconButton, Text } from "@chakra-ui/react";
+import { Button, HStack, IconButton } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
 
@@ -23,9 +23,25 @@ export const Pagination: React.FC<PaginationProps> = ({
     } else if (currentPage < 5) {
       visiblePages = [1, 2, 3, 4, 5, "...", totalPages];
     } else if (currentPage >= totalPages - 3) {
-      visiblePages = [1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+      visiblePages = [
+        1,
+        "...",
+        totalPages - 4,
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages,
+      ];
     } else {
-      visiblePages = [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages];
+      visiblePages = [
+        1,
+        "...",
+        currentPage - 1,
+        currentPage,
+        currentPage + 1,
+        "...",
+        totalPages,
+      ];
     }
 
     setPages(visiblePages);
@@ -33,7 +49,8 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   const handlePageClick = (page: number | string) => {
     if (page === "...") {
-      const newPage = currentPage < totalPages / 2 ? currentPage + 5 : currentPage - 5;
+      const newPage =
+        currentPage < totalPages / 2 ? currentPage + 5 : currentPage - 5;
       onPageChange(Math.max(1, Math.min(totalPages, newPage)));
     } else {
       onPageChange(page as number);

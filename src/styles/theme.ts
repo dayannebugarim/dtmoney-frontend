@@ -1,43 +1,55 @@
 import { extendTheme } from "@chakra-ui/react";
 import { chakraPaginationStyles } from "./paginationTheme";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import "@fontsource/roboto/900.css";
 
 const themes = {
+  fonts: {
+    heading: `'Roboto', sans-serif`,
+    body: `'Roboto', sans-serif`,
+  },
   styles: {
     global: {
-      'html, body': {
-        background: '#202024',
-        color: "#ffffff",
-        height: '100%'
+      "html, body": {
+        background: "#202024",
+        color: "#E1E1E6",
+        height: "100%",
       },
-      'input': {
+      input: {
         paddingY: 6,
         variant: "filled",
         background: "#121214",
+        border: "1px !important",
+        borderColor: "transparent !important",
         _hover: {
-          background: "#121214 !important"
+          background: "#121214 !important",
         },
         _focusVisible: {
-          borderColor:  "#00B37E !important",
-          background: "#121214 !important"
-        }
+          borderColor: "#00B37E !important",
+          background: "#121214 !important",
+        },
       },
-      'select': {
+      select: {
         variant: "filled",
+        border: "1px !important",
+        borderColor: "transparent !important",
         _hover: {
-          background: "#121214 !important"
+          background: "#121214 !important",
         },
         _focusVisible: {
-          borderColor:  "#00B37E !important",
-          background: "#121214 !important"
+          borderColor: "#00B37E !important",
+          background: "#121214 !important",
         },
         _placeholder: {
-          color: "gray.500"
-        }
-      }
+          color: "gray.500",
+        },
+      },
     },
   },
-  components: {...chakraPaginationStyles.components}
-}
+  components: { ...chakraPaginationStyles.components },
+};
 
 const theme = extendTheme(themes);
 export default theme;

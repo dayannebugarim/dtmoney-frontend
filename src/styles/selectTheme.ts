@@ -5,24 +5,29 @@ const chakraSelectStyles: ChakraStylesConfig = {
     ...provided,
     bg: "#121214",
     _selected: {
-      bg: "#121214"
+      bg: "#121214",
     },
     _hover: {
       bg: "#16161a",
-    }
+    },
+    fontSize: "1rem",
   }),
   menuList: (provided) => ({
     ...provided,
     bg: "#121214",
     border: "1px",
-    borderColor: "#202024",
-    boxShadow: 'dark-lg'
+    borderColor: "#29292e",
+    boxShadow: "dark-lg",
+  }),
+  input: (provided) => ({
+    ...provided,
+    border: "none !important",
   }),
   control: (provided) => ({
     ...provided,
     fontSize: "16px",
-    border: "2px",
-    height: "52px",
+    border: "1px",
+    height: "50px",
     borderColor: "transparent",
     bg: "#121214",
     _focus: {
@@ -31,7 +36,7 @@ const chakraSelectStyles: ChakraStylesConfig = {
     },
     _hover: {
       bg: "#121214",
-    }
+    },
   }),
   dropdownIndicator: (provided) => ({
     ...provided,
@@ -39,11 +44,11 @@ const chakraSelectStyles: ChakraStylesConfig = {
     p: 0,
     w: 6,
     mx: 2,
-    cursor: "inherit"
+    cursor: "inherit",
   }),
   indicatorSeparator: () => ({
-    display: "none"
-  })
+    display: "none",
+  }),
 };
 
-export { chakraSelectStyles }
+export { chakraSelectStyles };

@@ -1,14 +1,21 @@
-import { Container } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { MainSection } from "./MainSection";
-
-interface HomeMainProps {}
+import { SideSection } from "./SideSection";
 
 export const HomeMain = () => {
   return (
     <>
-      <Container margin={0} padding={0}>
+      <HStack
+        my="6rem"
+        minWidth="100%"
+        // border="1px"
+        // borderColor="red"
+        spacing={6}
+        align="start"
+      >
         <MainSection />
-      </Container>
+        <SideSection />
+      </HStack>
     </>
   );
 };

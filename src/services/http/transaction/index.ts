@@ -7,6 +7,7 @@ import {
   SearchTransactionParams,
   SearchTransactionResponse,
   TransactionsSummaryResponse,
+  TransactionsYearSummaryResponse,
 } from "./types";
 import api from "@/services/api";
 
@@ -85,4 +86,9 @@ export const createCategoryRequest = async ({
     name,
   });
   return response as { id: string };
+};
+
+export const transactionsYearSummaryRequest = async (userId: string) => {
+  const { data: response } = await api.get(`/transaction/summary/year/${userId}`);
+  return response as TransactionsYearSummaryResponse[];
 };

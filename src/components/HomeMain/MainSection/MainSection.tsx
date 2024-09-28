@@ -1,5 +1,5 @@
 import { List } from "@/components/List";
-import { Pagination } from "@/components/Pagination";
+import { Pagination } from "@/components/List/Pagination";
 import { Search } from "@/components/Search";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useTransactionContext } from "@/contexts/TransactionsContext";
@@ -8,14 +8,13 @@ import { Transaction } from "@/services/http/transaction/types";
 import { Box } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-interface MainSectionProps {}
-
 export const MainSection = () => {
   const { user } = useAuthContext();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [description, setDescription] = useState<string>();
+  const [isLoaded, setIsLoaded] = useState(false);
   const { hasUpdated } = useTransactionContext();
 
   useEffect(() => {
@@ -25,12 +24,13 @@ export const MainSection = () => {
       const { transactions, totalPages } = await searchTransactionRequest({
         userId: user?.id,
         page: currentPage,
-        pageSize: 5,
+        pageSize: 8,
         description,
       });
 
       setTransactions(transactions);
       setTotalPages(totalPages);
+      setIsLoaded(true);
     }
 
     getTransactionsData(currentPage);
@@ -42,11 +42,17 @@ export const MainSection = () => {
 
   return (
     <>
-      <Box width="60vw"  mt="6rem">
+      <Box width="65%" 
+      // border="1px" borderColor="red"
+      >
         <Search setDescription={setDescription} />
-        <List data={transactions} />
+        <List data={transactions} isLoaded={isLoaded} />
 
-        <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </Box>
     </>
   );

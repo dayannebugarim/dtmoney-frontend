@@ -9,6 +9,7 @@ import {
   MenuItem,
   VStack,
   Avatar,
+  Image,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { destroyCookie } from "nookies";
@@ -44,11 +45,12 @@ export const UserMenu = ({ name, email, photo }: UserMenuProps) => {
             <ChevronDownIcon boxSize={4} color="#7C7C8A" />
           </HStack>
         </MenuButton>
-        <MenuList bgColor="#29292E" border="none" boxShadow="dark-lg">
+        <MenuList bgColor="#121214" borderColor="#29292e" boxShadow="dark-lg">
           <MenuItem
+            icon={<Image src="icons/logout-icon.svg" alt="Logout icon" />}
             onClick={handleLogout}
-            bgColor="#29292E"
-            _hover={{ bg: "#323238" }}
+            bgColor="#121214"
+            _hover={{ bg: "#16161a" }}
           >
             Sair
           </MenuItem>

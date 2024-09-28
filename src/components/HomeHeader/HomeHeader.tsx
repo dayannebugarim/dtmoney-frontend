@@ -1,5 +1,5 @@
 "use client";
-import { Box, HStack, Image, useDisclosure, VStack } from "@chakra-ui/react";
+import { HStack, Image, useDisclosure, VStack } from "@chakra-ui/react";
 import { Card } from "./Card";
 import { UserMenu } from "./UserMenu";
 import { useAuthContext } from "@/contexts/AuthContext";
@@ -9,6 +9,8 @@ import { TransactionsSummaryResponse } from "@/services/http/transaction/types";
 import { NewTransactionModal } from "../NewTransactionModal";
 import { ButtonComponent } from "../Button";
 import { useTransactionContext } from "@/contexts/TransactionsContext";
+import { CardSkeleton } from "./Card/CardSkeleton";
+import { UserSkeleton } from "./UserMenu/UserSkeleton";
 
 interface SummaryCard {
   title: string;
@@ -20,6 +22,8 @@ export const HomeHeader = () => {
   const { user } = useAuthContext();
   const { hasUpdated } = useTransactionContext();
   const [summary, setSummary] = useState<TransactionsSummaryResponse>();
+  const [isCardLoaded, setIsCardLoaded] = useState(false);
+  const [isMenuLoaded, setIsMenuLoaded] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -29,6 +33,8 @@ export const HomeHeader = () => {
       const response = await transactionsSummaryRequest(user?.id);
 
       setSummary(response);
+      setIsCardLoaded(true);
+      setIsMenuLoaded(false);
     }
 
     getSummaryData();
@@ -66,7 +72,11 @@ export const HomeHeader = () => {
             Nova Transação
           </ButtonComponent>
           <Image src="/dtmoney-logo.svg" alt="DT Money Logo" />
-          <UserMenu name={user?.name} email={user?.email} />
+          {summary && isCardLoaded ? (
+            <UserMenu name={user?.name} email={user?.email} />
+          ) : (
+            <UserSkeleton isLoaded={isMenuLoaded} />
+          )}
         </HStack>
         <HStack
           marginTop={-14}
@@ -74,18 +84,25 @@ export const HomeHeader = () => {
           position="relative"
           width="100%"
           justify="space-between"
+          spacing={6}
         >
-          {cardsData.map((data, index) => {
-            return (
-              <Card
-                key={index}
-                title={data.title}
-                icon={data.icon}
-                value={data.value}
-                green={index === cardsData.length - 1 ? true : false}
-              />
-            );
-          })}
+          {summary && isCardLoaded ? (
+            <>
+              {cardsData.map((data, index) => {
+                return (
+                  <Card
+                    key={index}
+                    title={data.title}
+                    icon={data.icon}
+                    value={data.value}
+                    green={index === cardsData.length - 1 ? true : false}
+                  />
+                );
+              })}
+            </>
+          ) : (
+            <CardSkeleton isLoaded={isCardLoaded} />
+          )}
         </HStack>
       </VStack>
 

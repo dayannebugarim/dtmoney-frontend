@@ -1,4 +1,4 @@
-import { Container, HStack, Text, Image, Box } from "@chakra-ui/react";
+import { HStack, Text, Image, Box } from "@chakra-ui/react";
 
 interface CardProps {
   title: string;
@@ -16,7 +16,8 @@ export const Card = ({ title, icon, value, green }: CardProps) => {
         backgroundColor={bgColor}
         padding={6}
         rounded="md"
-        minW="350px"
+        minW="260px"
+        w="30%"
       >
         <HStack display="flex" justify="space-between" paddingBottom={2}>
           <Text color="#C4C4CC">{title}</Text>

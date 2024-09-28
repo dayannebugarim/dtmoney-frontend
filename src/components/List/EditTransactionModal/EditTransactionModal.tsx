@@ -187,6 +187,7 @@ export const EditTransactionModal = ({
                     selectedOptionStyle="check"
                     placeholder="Crie ou selecione uma categoria"
                     options={options}
+                    defaultValue={options.find((o) => o.value === data.categoryId)}
                     chakraStyles={chakraSelectStyles}
                   />
                 </FormControl>
