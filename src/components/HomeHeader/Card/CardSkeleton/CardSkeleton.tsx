@@ -18,6 +18,7 @@ export const CardSkeleton: React.FC<CardSkeletonProps> = ({ isLoaded }) => {
       {[...Array(repeatNumber)].map((e, i) => {
         return (
           <VStack
+            key={`card-skeleton-${i}`}
             backgroundColor={
               i === repeatNumber - 1
                 ? greenCardStyle.backgroundColor

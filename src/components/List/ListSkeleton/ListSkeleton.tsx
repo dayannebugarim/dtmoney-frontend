@@ -14,6 +14,7 @@ export const ListSkeleton: React.FC<ListSkeletonProps> = ({ isLoaded }) => {
           {[...Array(repeatNumber)].map((e, i) => {
             return (
               <Skeleton
+                key={`list-skeleton-${i}`}
                 isLoaded={isLoaded}
                 fadeDuration={2}
                 paddingX={10}
