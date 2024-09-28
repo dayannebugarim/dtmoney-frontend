@@ -75,7 +75,7 @@ export const ButtonComponent = ({
         color={config[variant].color ?? "white"}
         borderColor={config[variant].borderColor}
         paddingY={6}
-        paddingX={10}
+        paddingX={4}
         _hover={{ bg: config[variant].hoverBg }}
         _active={{
           transform: "scale(0.98)",

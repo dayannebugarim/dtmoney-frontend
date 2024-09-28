@@ -1,5 +1,12 @@
 "use client";
-import { HStack, Image, useDisclosure, VStack } from "@chakra-ui/react";
+import {
+  HStack,
+  Icon,
+  Image,
+  useBreakpoint,
+  useDisclosure,
+  VStack,
+} from "@chakra-ui/react";
 import { Card } from "./Card";
 import { UserMenu } from "./UserMenu";
 import { useAuthContext } from "@/contexts/AuthContext";
@@ -11,6 +18,7 @@ import { ButtonComponent } from "../Button";
 import { useTransactionContext } from "@/contexts/TransactionsContext";
 import { CardSkeleton } from "./Card/CardSkeleton";
 import { UserSkeleton } from "./UserMenu/UserSkeleton";
+import { AddIcon } from "@chakra-ui/icons";
 
 interface SummaryCard {
   title: string;
@@ -40,6 +48,9 @@ export const HomeHeader = () => {
     getSummaryData();
   }, [user?.id, hasUpdated]);
 
+  const breakpointType = useBreakpoint();
+  const hideButtonNameBreakpoints = ["sm", "base"];
+
   const cardsData: SummaryCard[] = [
     {
       title: "Entradas",
@@ -60,7 +71,17 @@ export const HomeHeader = () => {
 
   return (
     <>
-      <VStack backgroundColor="#121214" justify="space-between" paddingX="8rem">
+      <VStack
+        backgroundColor="#121214"
+        justify="space-between"
+        paddingX={{
+          "2xl": "8rem",
+          lg: "4rem",
+          md: "2rem",
+          sm: "1rem",
+          base: "1rem",
+        }}
+      >
         <HStack
           display="flex"
           justify="space-between"
@@ -69,7 +90,11 @@ export const HomeHeader = () => {
           width="100%"
         >
           <ButtonComponent onClick={onOpen} variant="primary">
-            Nova Transação
+            {!hideButtonNameBreakpoints.includes(breakpointType) ? (
+              "Nova Transação"
+            ) : (
+              <Icon as={AddIcon} />
+            )}
           </ButtonComponent>
           <Image src="/dtmoney-logo.svg" alt="DT Money Logo" />
           {summary && isCardLoaded ? (
@@ -85,6 +110,13 @@ export const HomeHeader = () => {
           width="100%"
           justify="space-between"
           spacing={6}
+          overflowX={{
+            "2xl": "hidden",
+            lg: "hidden",
+            md: "auto",
+            sm: "auto",
+            base: "auto",
+          }}
         >
           {summary && isCardLoaded ? (
             <>

@@ -120,7 +120,7 @@ export const NewTransactionModal = ({
     setDescription("");
     setType("");
     setValue(undefined);
-  }
+  };
 
   const options = categories.map((category) => {
     return {
@@ -135,7 +135,14 @@ export const NewTransactionModal = ({
         <ModalOverlay backdropFilter="blur(10px)" />
         <ModalContent
           bg="#202024"
-          minWidth="500px"
+          minWidth={{
+            "2xl": "500px",
+            lg: "500px",
+            md: "500px",
+            sm: "90%",
+            base: "90%",
+          }}
+          marginX="1rem"
           maxHeight="530px"
           p={8}
           rounded="md"

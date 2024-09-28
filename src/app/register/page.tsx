@@ -12,9 +12,16 @@ import {
   Alert,
   AlertIcon,
   FormControl,
+  AlertTitle,
+  AlertDescription,
 } from "@chakra-ui/react";
-import { ArrowBackIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import {
+  ArrowBackIcon,
+  CheckIcon,
+  ViewIcon,
+  ViewOffIcon,
+} from "@chakra-ui/icons";
+import { ChangeEvent, useState } from "react";
 import NextLink from "next/link";
 import { ButtonComponent } from "@/components/Button";
 import { createUserRequest } from "@/services/http/user";
@@ -28,34 +35,27 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [error, setError] = useState("");
+  const [isPasswordFieldFocus, setIsPasswordFieldFocus] = useState(false);
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const validatePassword = (password: string) => {
-    const hasLetters = /[a-zA-Z]/.test(password);
-    const hasNumbers = /\d/.test(password);
-    return hasLetters && hasNumbers;
-  };
+  const isMinLength = password.length >= 8;
+  const hasLettersAndNumbers = /[a-zA-Z]/.test(password) && /\d/.test(password);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (password !== repeatPassword) {
-      setError("As senhas não correspondem.");
-      return;
-    }
-
-    if (password.length < 8) {
+    if (!isMinLength) {
       setError("A senha deve ter no mínimo 8 caracteres.");
       return;
     }
 
-    if (!validatePassword(password)) {
+    if (!hasLettersAndNumbers) {
       setError("A senha deve conter pelo menos letras e números.");
       return;
     }
-
     setIsLoading(true);
     try {
       await createUserRequest({ name, email, password });
@@ -64,6 +64,26 @@ export default function Register() {
       setError(error.message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleChangePassword = async (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (repeatPassword && e.target.value !== repeatPassword) {
+      setPasswordsMatch(false);
+    } else {
+      setPasswordsMatch(true);
+    }
+  };
+
+  const handleChangeRepeatPassword = async (
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    setRepeatPassword(e.target.value);
+    if (password !== e.target.value) {
+      setPasswordsMatch(false);
+    } else {
+      setPasswordsMatch(true);
     }
   };
 
@@ -79,8 +99,14 @@ export default function Register() {
       >
         <Box
           bg="#202024"
-          minWidth="500px"
-          maxHeight="530px"
+          minWidth={{
+            "2xl": "500px",
+            lg: "500px",
+            md: "500px",
+            sm: "90%",
+            base: "90%",
+          }}
+          marginX="1rem"
           p={8}
           rounded="md"
           boxShadow="dark-lg"
@@ -144,7 +170,9 @@ export default function Register() {
                   <InputGroup size="md">
                     <Input
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={handleChangePassword}
+                      onFocus={() => setIsPasswordFieldFocus(true)}
+                      onBlur={() => setIsPasswordFieldFocus(false)}
                       pr="4.5rem"
                       bg="#121214"
                       paddingY={6}
@@ -166,12 +194,39 @@ export default function Register() {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
+                  {isPasswordFieldFocus && (
+                    <Alert
+                      borderRadius="md"
+                      background="none"
+                      padding={2}
+                      fontSize="0.9rem"
+                      rounded="md"
+                      flexDirection="column"
+                      alignItems="start"
+                      justifyContent="center"
+                      textAlign="start"
+                    >
+                      <AlertDescription
+                        color={isMinLength ? "#00B37E" : "#7C7C8A"}
+                      >
+                        {isMinLength ? <Icon as={CheckIcon} /> : ""} Pelo menos
+                        8 caracteres
+                      </AlertDescription>
+
+                      <AlertDescription
+                        color={hasLettersAndNumbers ? "#00B37E" : "#7C7C8A"}
+                      >
+                        {hasLettersAndNumbers ? <Icon as={CheckIcon} /> : ""}{" "}
+                        Pelo menos letras e números
+                      </AlertDescription>
+                    </Alert>
+                  )}
                 </FormControl>
                 <FormControl id="repeat-password">
                   <InputGroup size="md">
                     <Input
                       value={repeatPassword}
-                      onChange={(e) => setRepeatPassword(e.target.value)}
+                      onChange={handleChangeRepeatPassword}
                       pr="4.5rem"
                       bg="#121214"
                       paddingY={6}
@@ -195,6 +250,20 @@ export default function Register() {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
+                  {!passwordsMatch && (
+                    <Alert
+                      status="error"
+                      borderRadius="md"
+                      marginBottom={-8}
+                      background="none"
+                      color="#F75A68"
+                      padding={2}
+                      fontSize="0.9rem"
+                    >
+                      <AlertIcon />
+                      As senhas não correspondem.
+                    </Alert>
+                  )}
                 </FormControl>
                 {error && (
                   <Alert
@@ -211,6 +280,14 @@ export default function Register() {
                   </Alert>
                 )}
                 <ButtonComponent
+                  isDisabled={
+                    !name ||
+                    !email ||
+                    !password ||
+                    !repeatPassword ||
+                    !passwordsMatch ||
+                    !isMinLength
+                  }
                   isLoading={isLoading}
                   type="submit"
                   variant="primary"

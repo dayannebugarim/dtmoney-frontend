@@ -42,8 +42,16 @@ export const MainSection = () => {
 
   return (
     <>
-      <Box width="65%" 
-      // border="1px" borderColor="red"
+      <Box
+        width={{
+          "2xl": "65%",
+          lg: "65%",
+          md: "100%",
+          sm: "100%",
+          base: "100%",
+        }}
+        // border="1px"
+        // borderColor="red"
       >
         <Search setDescription={setDescription} />
         <List data={transactions} isLoaded={isLoaded} />

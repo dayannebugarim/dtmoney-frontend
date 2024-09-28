@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { destroyCookie } from "nookies";
+import { useBreakpoint } from "@chakra-ui/react";
 
 interface UserMenuProps {
   name: string | undefined;
@@ -21,6 +22,9 @@ interface UserMenuProps {
 }
 
 export const UserMenu = ({ name, email, photo }: UserMenuProps) => {
+  const breakpointType = useBreakpoint();
+  const hideEmailBreakpoints = ["md", "sm", "base"];
+  const hideNameBreakpoints = ["sm", "base"];
   const router = useRouter();
 
   const handleLogout = () => {
@@ -29,14 +33,36 @@ export const UserMenu = ({ name, email, photo }: UserMenuProps) => {
     router.push("/login");
   };
 
+  const formatName = (name: string) => {
+    const nameParts = name.trim().split(" ");
+    const firstName = nameParts[0];
+    const lastNames = nameParts.slice(1);
+
+    const formattedLastNames = lastNames
+      .map((lastName) => lastName.charAt(0).toUpperCase() + ".")
+      .join(" ");
+
+    return `${firstName} ${formattedLastNames}`;
+  };
+
   return (
     <>
       <Menu direction="rtl">
         <MenuButton>
           <HStack spacing={4} padding={2}>
             <VStack align="end" justify="center" spacing={1}>
-              <Text as="b">{name}</Text>
-              <Text color="#7C7C8A">{email}</Text>
+              {!hideNameBreakpoints.includes(breakpointType) ? (
+                <Text as="b">
+                  {breakpointType === "md" && name ? formatName(name) : name}
+                </Text>
+              ) : (
+                <></>
+              )}
+              {!hideEmailBreakpoints.includes(breakpointType) ? (
+                <Text color="#7C7C8A">{email}</Text>
+              ) : (
+                <></>
+              )}
             </VStack>
 
             <Box padding={1}>

@@ -13,7 +13,7 @@ export const UserSkeleton: React.FC<UserSkeletonProps> = ({ isLoaded }) => {
             isLoaded={isLoaded}
             fadeDuration={2}
             height="24px"
-            width="70px"
+            width={{ "2xl": "70px", lg: "70px", md: "50px", sm: 0, base: 0 }}
             rounded="md"
             startColor="#29292E"
             endColor="#36363b"
@@ -22,13 +22,13 @@ export const UserSkeleton: React.FC<UserSkeletonProps> = ({ isLoaded }) => {
             isLoaded={isLoaded}
             fadeDuration={4}
             height="24px"
-            width="120px"
+            width={{ "2xl": "120px", lg: "120px", md: "90px", sm: 0, base: 0 }}
             rounded="md"
             startColor="#29292E"
             endColor="#36363b"
           ></Skeleton>
         </VStack>
-        <SkeletonCircle size="48px" />
+        <SkeletonCircle size="48px" startColor="#29292E" endColor="#36363b" />
       </HStack>
     </>
   );

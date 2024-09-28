@@ -6,7 +6,13 @@ export const SideSection = () => {
   return (
     <>
       <VStack
-        minW="35%"
+        width={{
+          "2xl": "35%",
+          lg: "35%",
+          md: "100%",
+          sm: "100%",
+          base: "100%",
+        }}
         // border="1px"
         // borderColor="red"
         spacing={6}

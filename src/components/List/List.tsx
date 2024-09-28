@@ -83,6 +83,13 @@ export const List = ({ data, isLoaded }: ListProps) => {
                   <HStack
                     display="flex"
                     justify="space-between"
+                    align={{
+                      "2xl": "center",
+                      lg: "center",
+                      md: "center",
+                      sm: "start",
+                      base: "start",
+                    }}
                     backgroundColor="#29292E"
                     paddingX={10}
                     paddingY={6}
@@ -91,80 +98,162 @@ export const List = ({ data, isLoaded }: ListProps) => {
                     border="1px"
                     borderColor="#2e2e35"
                     spacing={8}
-                    key={item.id}
+                    key={`list-item-${item.id}`}
                   >
-                    <Text
-                      color="#C4C4CC"
-                      minW="20%"
+                    <Box
                       // border="1px"
                       // borderColor="red"
+                      width="100%"
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      flexDirection={{
+                        "2xl": "row",
+                        lg: "row",
+                        md: "row",
+                        sm: "column",
+                        base: "column",
+                      }}
                     >
-                      {item.description}
-                    </Text>
-                    <Text
-                      as="b"
-                      color={valueColor}
-                      minW="15%"
-                      // border="1px"
-                      // borderColor="red"
-                    >
-                      {value}
-                    </Text>
-                    <HStack
-                      color="#7C7C8A"
-                      minW="15%"
-                      // border="1px"
-                      // borderColor="red"
-                    >
-                      {item.category.name && <Image src="icons/tag-icon.svg" />}
-                      <Text>{item.category.name}</Text>
-                    </HStack>
-                    <HStack
-                      color="#7C7C8A"
-                      minW="15%"
-                      // border="1px"
-                      // borderColor="red"
-                    >
-                      <Image src="icons/date-icon.svg" />
-                      <Text>{date}</Text>
-                    </HStack>
-
-                    <Menu>
-                      <MenuButton
-                        as={IconButton}
-                        border="none"
-                        color="#7C7C8A"
-                        _hover={{ bg: "#323238" }}
-                        _active={{ bg: "#323238" }}
-                        aria-label="Options"
-                        icon={
-                          <Image src="icons/three-dots-vertical-icon.svg" />
-                        }
-                        variant="outline"
-                      />
-                      <MenuList
-                        bgColor="#121214"
-                        borderColor="#29292e"
-                        boxShadow="dark-lg"
+                      <HStack
+                        display="flex"
+                        justify="space-between"
+                        spacing={{
+                          "2xl": 8,
+                          lg: 8,
+                          md: 8,
+                          sm: 2,
+                          base: 2,
+                        }}
+                        w={{
+                          "2xl": "50%",
+                          lg: "50%",
+                          md: "45%",
+                          sm: "100%",
+                          base: "100%",
+                        }}
+                        // border="1px"
+                        // borderColor="red"
+                        flexDirection={{
+                          "2xl": "row",
+                          lg: "row",
+                          md: "row",
+                          sm: "column",
+                          base: "column",
+                        }}
+                        align={{
+                          "2xl": "center",
+                          lg: "center",
+                          md: "center",
+                          sm: "start",
+                          base: "start",
+                        }}
+                        pb={{
+                          "2xl": 0,
+                          lg: 0,
+                          md: 0,
+                          sm: 2,
+                        }}
                       >
-                        <MenuItem
-                          icon={<EditIcon />}
-                          bgColor="#121214"
-                          _hover={{ bg: "#16161a" }}
-                          onClick={() => handleData(item, "edit")}
+                        <Box maxW="60%">
+                          <Text color="#C4C4CC"
+                          // border="1px" borderColor="red"
+                          >
+                            {item.description}
+                          </Text>
+                        </Box>
+                        <Box minW="40%">
+                          <Text
+                            as="b"
+                            textAlign="start"
+                            color={valueColor}
+                            // border="1px"
+                            // borderColor="red"
+                          >
+                            {value}
+                          </Text>
+                        </Box>
+                      </HStack>
+                      <HStack
+                        display="flex"
+                        justify="space-between"
+                        spacing={8}
+                        w={{
+                          "2xl": "40%",
+                          lg: "40%",
+                          md: "45%",
+                          sm: "100%",
+                          base: "100%",
+                        }}
+                        // border="1px"
+                        // borderColor="red"
+                      >
+                        <HStack
+                          color="#7C7C8A"
+                          maxW="45%"
+                          // border="1px"
+                          // borderColor="red"
                         >
-                          Editar
-                        </MenuItem>
-                        <MenuItem
-                          icon={<DeleteIcon />}
-                          bgColor="#121214"
-                          _hover={{ bg: "#16161a" }}
-                          onClick={() => handleData(item, "del")}
+                          <Image src="icons/tag-icon.svg" />
+
+                          <Text>{item.category.name ?? "-"}</Text>
+                        </HStack>
+                        <HStack
+                          color="#7C7C8A"
+                          maxW="45%"
+                          // border="1px"
+                          // borderColor="red"
                         >
-                          Excluir
-                        </MenuItem>
-                      </MenuList>
-                    </Menu>
+                          <Image src="icons/date-icon.svg" />
+                          <Text>{date}</Text>
+                        </HStack>
+                      </HStack>
+                    </Box>
+
+                    <Box
+                      // border="1px"
+                      // borderColor="red"
+                      display="flex"
+                      justifyContent="center"
+                      w="10%"
+                    >
+                      <Menu>
+                        <MenuButton
+                          as={IconButton}
+                          border="none"
+                          color="#7C7C8A"
+                          _hover={{ bg: "#323238" }}
+                          _active={{ bg: "#323238" }}
+                          aria-label="Options"
+                          icon={
+                            <Image src="icons/three-dots-vertical-icon.svg" />
+                          }
+                          variant="outline"
+                        />
+                        <MenuList
+                          bgColor="#121214"
+                          borderColor="#29292e"
+                          boxShadow="dark-lg"
+                        >
+                          <MenuItem
+                            icon={<EditIcon />}
+                            bgColor="#121214"
+                            _hover={{ bg: "#16161a" }}
+                            onClick={() => handleData(item, "edit")}
+                          >
+                            Editar
+                          </MenuItem>
+                          <MenuItem
+                            icon={<DeleteIcon />}
+                            bgColor="#121214"
+                            _hover={{ bg: "#16161a" }}
+                            onClick={() => handleData(item, "del")}
+                          >
+                            Excluir
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
+                    </Box>
                   </HStack>
                 );
               })}

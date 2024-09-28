@@ -9,7 +9,7 @@ function Home() {
     <>
       <Container maxW="100vw" margin={0} padding={0}>
         <HomeHeader />
-        <Box marginX="8rem">
+        <Box marginX={{ "2xl": "8rem", lg: "4rem", md: "2rem", sm: "1rem", base: "1rem" }}>
           <HomeMain />
         </Box>
       </Container>

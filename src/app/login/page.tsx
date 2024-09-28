@@ -81,7 +81,14 @@ export default function Login() {
       >
         <Box
           bg="#202024"
-          minWidth="500px"
+          minWidth={{
+            "2xl": "500px",
+            lg: "500px",
+            md: "500px",
+            sm: "90%",
+            base: "90%",
+          }}
+          marginX="1rem"
           maxHeight="530px"
           p={8}
           rounded="md"
