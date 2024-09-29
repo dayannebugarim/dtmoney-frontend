@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { parseCookies } from "nookies";
 import { Spinner, Center } from "@chakra-ui/react";
 
-export const withAuth = (WrappedComponent: React.ComponentType) => {
+export const redirectIfAuthenticated = (
+  WrappedComponent: React.ComponentType
+) => {
   return (props: any) => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
@@ -13,8 +15,8 @@ export const withAuth = (WrappedComponent: React.ComponentType) => {
       const cookies = parseCookies();
       const token = cookies["token"];
 
-      if (!token) {
-        router.push("/login");
+      if (token) {
+        router.push("/");
       } else {
         setLoading(false);
       }
