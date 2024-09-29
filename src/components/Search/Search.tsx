@@ -1,17 +1,26 @@
 import { FormControl, HStack, Input } from "@chakra-ui/react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { ButtonComponent } from "../Button";
+import { Transaction } from "@/services/http/transaction/types";
 
 interface SearchProps {
   setDescription: Dispatch<SetStateAction<string | undefined>>;
+  setIsLoaded: Dispatch<SetStateAction<boolean>>;
+  setTransactions: Dispatch<SetStateAction<Transaction[]>>;
 }
 
-export const Search = ({ setDescription }: SearchProps) => {
+export const Search = ({
+  setDescription,
+  setIsLoaded,
+  setTransactions,
+}: SearchProps) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setDescription(searchTerm);
+    setTransactions([]);
+    setIsLoaded(false);
   };
 
   return (

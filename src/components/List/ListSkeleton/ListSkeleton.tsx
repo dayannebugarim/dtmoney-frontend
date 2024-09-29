@@ -5,7 +5,7 @@ interface ListSkeletonProps {
 }
 
 export const ListSkeleton: React.FC<ListSkeletonProps> = ({ isLoaded }) => {
-  const repeatNumber = 8;
+  const repeatNumber = 6;
 
   return (
     <>

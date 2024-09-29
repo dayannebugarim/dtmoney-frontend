@@ -7,6 +7,8 @@ import { searchTransactionRequest } from "@/services/http/transaction";
 import { Transaction } from "@/services/http/transaction/types";
 import { Box } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { EmptyContent } from "../EmptyContent";
+import { ListSkeleton } from "@/components/List/ListSkeleton";
 
 export const MainSection = () => {
   const { user } = useAuthContext();
@@ -53,14 +55,29 @@ export const MainSection = () => {
         // border="1px"
         // borderColor="red"
       >
-        <Search setDescription={setDescription} />
-        <List data={transactions} isLoaded={isLoaded} />
-
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
+        <Search
+          setDescription={setDescription}
+          setIsLoaded={setIsLoaded}
+          setTransactions={setTransactions}
         />
+
+        {transactions.length === 0 && !isLoaded && (
+          <ListSkeleton isLoaded={isLoaded} />
+        )}
+
+        {transactions.length > 0 && isLoaded && <List data={transactions} />}
+
+        {transactions.length === 0 && isLoaded && (
+          <EmptyContent type={!description ? "new" : "search"} />
+        )}
+
+        {transactions.length > 0 && (
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        )}
       </Box>
     </>
   );
