@@ -23,6 +23,8 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import { ButtonComponent } from "@/components/Button";
 import { chakraSelectStyles } from "@/styles/selectTheme";
 import { useTransactionContext } from "@/contexts/TransactionsContext";
+import { toNumber } from "@/utils/toNumber";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 type OptionType = {
   label: string;
@@ -51,7 +53,7 @@ export const EditTransactionModal = ({
   const { user } = useAuthContext();
   const { setHasUpdated } = useTransactionContext();
   const [description, setDescription] = useState<string>("");
-  const [value, setValue] = useState<number>(0);
+  const [value, setValue] = useState<string>("");
   const [categories, setCategories] = useState<ListCategoriesResponse[]>([]);
   const [categoryId, setCategoryId] = useState<string | undefined>("");
   const [type, setType] = useState<string>("");
@@ -67,14 +69,14 @@ export const EditTransactionModal = ({
       const response = await listCategoriesRequest({ userId: user?.id });
       setCategories(response);
       setDescription(data.description);
-      setValue(data.value);
+      setValue(formatCurrency(data.value.toString()));
       setCategoryId(data.categoryId);
       setType(data.type);
       setSelectIsLoading(false);
     }
 
     getCategories();
-  }, [user?.id, isOpen, data]);
+  }, [user?.id, data]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +87,7 @@ export const EditTransactionModal = ({
 
       await editTransactionRequest({
         id: data.id,
-        value,
+        value: toNumber(value),
         categoryId,
         description,
         type,
@@ -100,7 +102,13 @@ export const EditTransactionModal = ({
     }
   };
 
-  const handleChange = (newValue: unknown) => {
+  const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    const formattedValue = formatCurrency(inputValue);
+    setValue(formattedValue);
+  };
+
+  const handleSelectChange = (newValue: unknown) => {
     if (newValue && typeof newValue === "object" && "value" in newValue) {
       const selectedOption = newValue as SingleValue<OptionType>;
       setCategoryId(selectedOption?.value);
@@ -172,10 +180,9 @@ export const EditTransactionModal = ({
                 </FormControl>
                 <FormControl id="value">
                   <Input
-                    type="number"
                     required
                     value={value}
-                    onChange={(e) => setValue(+e.target.value)}
+                    onChange={handleValueChange}
                     paddingY={6}
                     variant="filled"
                     bg="#121214"
@@ -188,7 +195,7 @@ export const EditTransactionModal = ({
                     variant="filled"
                     isClearable
                     isDisabled={isSelectLoading}
-                    onChange={handleChange}
+                    onChange={handleSelectChange}
                     onCreateOption={handleCreateCategory}
                     isLoading={isSelectLoading}
                     selectedOptionStyle="check"

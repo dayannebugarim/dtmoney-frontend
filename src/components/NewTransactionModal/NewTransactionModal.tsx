@@ -23,6 +23,8 @@ import { CreatableSelect, SingleValue } from "chakra-react-select";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { chakraSelectStyles } from "@/styles/selectTheme";
 import { useTransactionContext } from "@/contexts/TransactionsContext";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { toNumber } from "@/utils/toNumber";
 
 type OptionType = {
   label: string;
@@ -41,7 +43,7 @@ export const NewTransactionModal = ({
   const { user } = useAuthContext();
   const { setHasUpdated } = useTransactionContext();
   const [description, setDescription] = useState("");
-  const [value, setValue] = useState<number>();
+  const [value, setValue] = useState<string>('');
   const [categories, setCategories] = useState<ListCategoriesResponse[]>([]);
   const [categoryId, setCategoryId] = useState<string>();
   const [type, setType] = useState("");
@@ -54,7 +56,6 @@ export const NewTransactionModal = ({
       if (!user?.id || !isOpen) return;
 
       const response = await listCategoriesRequest({ userId: user?.id });
-
       setCategories(response);
     }
 
@@ -70,7 +71,7 @@ export const NewTransactionModal = ({
 
       await createTransactionRequest({
         userId: user?.id,
-        value: value ?? 0,
+        value: toNumber(value),
         categoryId: categoryId ?? null,
         description,
         type,
@@ -84,12 +85,18 @@ export const NewTransactionModal = ({
       setCategoryId("");
       setDescription("");
       setType("");
-      setValue(undefined);
+      setValue("");
       onClose();
     }
   };
 
-  const handleChange = (newValue: unknown) => {
+  const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    const formattedValue = formatCurrency(inputValue);
+    setValue(formattedValue);
+  };
+
+  const handleSelectChange = (newValue: unknown) => {
     if (newValue && typeof newValue === "object" && "value" in newValue) {
       const selectedOption = newValue as SingleValue<OptionType>;
       setCategoryId(selectedOption?.value);
@@ -119,7 +126,7 @@ export const NewTransactionModal = ({
     setCategoryId("");
     setDescription("");
     setType("");
-    setValue(undefined);
+    setValue("");
   };
 
   const options = categories.map((category) => {
@@ -168,10 +175,9 @@ export const NewTransactionModal = ({
                 </FormControl>
                 <FormControl id="value">
                   <Input
-                    type="number"
                     required
                     value={value}
-                    onChange={(e) => setValue(+e.target.value)}
+                    onChange={handleValueChange}
                     paddingY={6}
                     variant="filled"
                     bg="#121214"
@@ -184,7 +190,7 @@ export const NewTransactionModal = ({
                     variant="filled"
                     isClearable
                     isDisabled={isSelectLoading}
-                    onChange={handleChange}
+                    onChange={handleSelectChange}
                     onCreateOption={handleCreateCategory}
                     isLoading={isSelectLoading}
                     selectedOptionStyle="check"
