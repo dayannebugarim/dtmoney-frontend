@@ -38,7 +38,7 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
+    setError("");
     try {
       const response = await signInRequest({ email, password });
 
@@ -63,7 +63,9 @@ export default function Login() {
 
       router.push("/");
     } catch (error: any) {
-      setError(error.message);
+      const { request } = error;
+      const { message } = JSON.parse(request.response);
+      setError(message);
     } finally {
       setIsLoading(false);
     }

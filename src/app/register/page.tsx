@@ -61,7 +61,9 @@ export default function Register() {
       await createUserRequest({ name, email, password });
       router.push("/login");
     } catch (error: any) {
-      setError(error.message);
+      const { request } = error;
+      const { message } = JSON.parse(request.response);
+      setError(message);
     } finally {
       setIsLoading(false);
     }
